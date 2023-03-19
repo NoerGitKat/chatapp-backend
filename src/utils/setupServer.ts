@@ -10,6 +10,7 @@ import { Server as HttpServer } from "http";
 import { createClient } from "redis";
 import { Server as SocketServer } from "socket.io";
 import { appConfig } from "src/config";
+import getRoutes from "src/routes";
 import { SERVER_PORT, WEEK } from "../constants";
 
 class ChatServer {
@@ -53,7 +54,9 @@ class ChatServer {
 		app.use(json({ limit: "50mb" }));
 		app.use(urlencoded({ extended: true, limit: "50mb" }));
 	}
-	private routeMiddleware(app: Application): void {}
+	private routeMiddleware(app: Application): void {
+		getRoutes(app);
+	}
 	private globalErrorHandler(app: Application): void {}
 
 	private async startServer(app: Application): Promise<void> {
