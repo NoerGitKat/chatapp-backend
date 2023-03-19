@@ -6,7 +6,7 @@ import "express-async-errors";
 import helmet from "helmet";
 import hpp from "hpp";
 import { Server } from "http";
-import { WEEK } from "src/constants";
+import { SERVER_PORT, WEEK } from "../constants";
 
 class ChatServer {
 	private app: Application;
@@ -51,9 +51,22 @@ class ChatServer {
 	}
 	private routeMiddleware(app: Application): void {}
 	private globalErrorHandler(app: Application): void {}
-	private startServer(app: Application): void {}
+
+	private startServer(app: Application): void {
+		try {
+			const httpServer: Server = new Server(app);
+			this.startHttpServer(httpServer);
+		} catch (error) {
+			console.error(error);
+		}
+	}
 	private createSocketIO(httpServer: Server): void {}
-	private startHttpServer(httpServer: Server): void {}
+
+	private startHttpServer(httpServer: Server): void {
+		httpServer.listen(SERVER_PORT, function runServer() {
+			console.log(`The server is running on port: ${SERVER_PORT}!`);
+		});
+	}
 }
 
 export default ChatServer;
