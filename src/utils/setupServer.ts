@@ -2,15 +2,18 @@ import { createAdapter } from "@socket.io/redis-adapter";
 import compression from "compression";
 import session from "cookie-session";
 import cors from "cors";
-import { Application, json, urlencoded } from "express";
+import { Application, json, NextFunction, Request, Response, urlencoded } from "express";
 import "express-async-errors";
 import helmet from "helmet";
 import hpp from "hpp";
 import { Server as HttpServer } from "http";
+import { StatusCodes } from "http-status-codes";
 import { createClient } from "redis";
 import { Server as SocketServer } from "socket.io";
 import { appConfig } from "src/config";
 import getRoutes from "src/routes";
+import { CustomError } from "src/shared/globals/helpers/error-handlers";
+import { IErrorResponse } from "src/types";
 import { SERVER_PORT, WEEK } from "../constants";
 
 class ChatServer {
@@ -57,7 +60,24 @@ class ChatServer {
 	private routeMiddleware(app: Application): void {
 		getRoutes(app);
 	}
-	private globalErrorHandler(app: Application): void {}
+	private globalErrorHandler(app: Application): void {
+		app.all("*", function catchAllErrors(req: Request, res: Response) {
+			return res.status(StatusCodes.NOT_FOUND).json({ message: `${req.originalUrl} not found.` });
+		});
+
+		app.use(function catchCustomErrors(
+			error: IErrorResponse,
+			_req: Request,
+			res: Response,
+			next: NextFunction
+		) {
+			console.error(error);
+			if (error instanceof CustomError) {
+				return res.status(error.statusCode).json(error.serializeErrors());
+			}
+			next();
+		});
+	}
 
 	private async startServer(app: Application): Promise<void> {
 		try {
