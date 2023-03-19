@@ -6,6 +6,7 @@ import "express-async-errors";
 import helmet from "helmet";
 import hpp from "hpp";
 import { Server } from "http";
+import { appConfig } from "src/config";
 import { SERVER_PORT, WEEK } from "../constants";
 
 class ChatServer {
@@ -27,9 +28,9 @@ class ChatServer {
 		app.use(
 			session({
 				name: "newSession",
-				keys: ["test-key"],
+				keys: [appConfig.SECRET_KEY_1!, appConfig.SECRET_KEY_2!],
 				maxAge: 1 * WEEK,
-				secure: false // TODO: Change when in prod
+				secure: appConfig.NODE_ENV !== "development"
 			})
 		);
 
@@ -37,7 +38,7 @@ class ChatServer {
 		app.use(helmet()); // Sets various HTTP headers
 		app.use(
 			cors({
-				origin: "*",
+				origin: appConfig.CLIENT_BASEURL || "*",
 				credentials: true,
 				optionsSuccessStatus: 200,
 				methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
