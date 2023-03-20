@@ -1,4 +1,5 @@
 import { createAdapter } from "@socket.io/redis-adapter";
+import Logger from "bunyan";
 import compression from "compression";
 import session from "cookie-session";
 import cors from "cors";
@@ -15,6 +16,8 @@ import getRoutes from "src/routes";
 import { CustomError } from "src/shared/globals/helpers/error-handlers";
 import { IErrorResponse } from "src/types";
 import { SERVER_PORT, WEEK } from "../constants";
+
+const log: Logger = appConfig.createLogger("ChatServer");
 
 class ChatServer {
 	private app: Application;
@@ -71,7 +74,7 @@ class ChatServer {
 			res: Response,
 			next: NextFunction
 		) {
-			console.error(error);
+			log.error(error);
 			if (error instanceof CustomError) {
 				return res.status(error.statusCode).json(error.serializeErrors());
 			}
@@ -86,7 +89,7 @@ class ChatServer {
 			this.startHttpServer(httpServer);
 			this.socketIOConnections(socketIO);
 		} catch (error) {
-			console.error(error);
+			log.error(error);
 		}
 	}
 
@@ -102,7 +105,7 @@ class ChatServer {
 		try {
 			await Promise.all([pubClient.connect(), subClient.connect()]);
 		} catch (error) {
-			console.error(error);
+			log.error(error);
 		}
 		io.adapter(createAdapter(pubClient, subClient));
 		return io;
@@ -111,9 +114,9 @@ class ChatServer {
 	private socketIOConnections(io: SocketServer): void {}
 
 	private startHttpServer(httpServer: HttpServer): void {
-		console.log(`The server has started with process ${process.pid}`);
+		log.info(`The server has started with process ${process.pid}`);
 		httpServer.listen(SERVER_PORT, function runServer() {
-			console.log(`The server is running on port: ${SERVER_PORT}!`);
+			log.info(`The server is running on port: ${SERVER_PORT}!`);
 		});
 	}
 }

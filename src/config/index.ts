@@ -1,3 +1,4 @@
+import { createLogger } from "bunyan";
 import { config } from "dotenv";
 config();
 
@@ -20,6 +21,10 @@ class AppConfig {
 		this.CLIENT_BASEURL = process.env.CLIENT_BASEURL || "";
 		this.JWT_TOKEN = process.env.JWT_TOKEN || "";
 		this.REDIS_HOST = process.env.REDIS_HOST || "";
+	}
+
+	public createLogger(name: string) {
+		return createLogger({ name, level: "debug" });
 	}
 
 	public validateConfig(): void {
