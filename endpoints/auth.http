@@ -1,0 +1,16 @@
+@baseUrl = http://localhost:5000
+@urlPath= api/v1
+
+###
+POST {{baseUrl}}/{{urlPath}}/auth/signup
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+	"username": "Noer",
+	"password": "noernoer",
+	"email": "noer@noer.com",
+	"avatarColor": "blue",
+	"avatarImage": "https://randomuser.me/api/portraits/men/50.jpg"
+}
