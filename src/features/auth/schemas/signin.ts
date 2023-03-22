@@ -1,0 +1,18 @@
+import { object, ObjectSchema, string } from "joi";
+
+const loginSchema: ObjectSchema = object().keys({
+	username: string().required().min(4).max(8).messages({
+		"string.base": "Username must be of type string",
+		"string.min": "Invalid username",
+		"string.max": "Invalid username",
+		"string.empty": "Username is a required field"
+	}),
+	password: string().required().min(4).max(8).messages({
+		"string.base": "Password must be of type string",
+		"string.min": "Invalid password",
+		"string.max": "Invalid password",
+		"string.empty": "Password is a required field"
+	})
+});
+
+export { loginSchema };

@@ -1,0 +1,29 @@
+import { object, ObjectSchema, string } from "joi";
+
+const signupSchema: ObjectSchema = object().keys({
+	username: string().required().min(4).max(8).messages({
+		"string.base": "Username must be of type string",
+		"string.min": "Invalid username",
+		"string.max": "Invalid username",
+		"string.empty": "Username is a required field"
+	}),
+	password: string().required().min(4).max(8).messages({
+		"string.base": "Password must be of type string",
+		"string.min": "Invalid password",
+		"string.max": "Invalid password",
+		"string.empty": "Password is a required field"
+	}),
+	email: string().required().email().messages({
+		"string.base": "Email must be of type string",
+		"string.email": "Email must be valid",
+		"string.empty": "Email is a required field"
+	}),
+	avatarColor: string().required().messages({
+		"any.required": "Avatar color is required"
+	}),
+	avatarImage: string().required().messages({
+		"any.required": "Avatar image is required"
+	})
+});
+
+export { signupSchema };
