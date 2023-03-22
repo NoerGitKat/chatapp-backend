@@ -2,10 +2,10 @@ import { Request } from "express";
 import { ObjectSchema } from "joi";
 import { JoiRequestValidationError } from "../helpers/error-handlers";
 
-type IJoiDecorator = (target: unknown, key: string, descriptor: PropertyDescriptor) => void;
+type IJoiDecorator = (target: any, key: string, descriptor: PropertyDescriptor) => void;
 
 export function validateJoi(schema: ObjectSchema): IJoiDecorator {
-	return function validateSchema(_target: unknown, _key: string, descriptor: PropertyDescriptor) {
+	return (_target: any, _key: string, descriptor: PropertyDescriptor) => {
 		const originalMethod = descriptor.value;
 
 		descriptor.value = async function (...args: any[]) {
@@ -16,5 +16,6 @@ export function validateJoi(schema: ObjectSchema): IJoiDecorator {
 			}
 			return originalMethod.apply(this, args);
 		};
+		return descriptor;
 	};
 }
