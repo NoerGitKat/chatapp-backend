@@ -7,8 +7,8 @@ import { BadRequestError } from "src/shared/globals/helpers/error-handlers";
 import { Helpers } from "src/shared/globals/helpers/helpers";
 import { uploadToCloudinary } from "src/shared/globals/helpers/upload-to-cloudinary";
 import { authService } from "src/shared/services/db/auth.service";
+import { IAuthDocument, ISignUpData } from "../interfaces/auth.interface";
 import { signupSchema } from "../schemas/signup";
-import { IAuthDocument, ISignUpData } from "../types/auth.interface";
 
 export class SignUp {
 	@validateJoi(signupSchema)

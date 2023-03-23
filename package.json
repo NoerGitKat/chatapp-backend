@@ -5,8 +5,8 @@
 	"main": "app.js",
 	"scripts": {
 		"dev": "nodemon -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
-		"lint": "eslint src/**/*.ts --fix",
-		"format": "prettier src/**/*.ts --write",
+		"lint": "eslint src/**/**/*.ts --fix",
+		"format": "prettier src/**/**/*.ts --write",
 		"build": "tsc -p .",
 		"prepare": "husky install"
 	},
