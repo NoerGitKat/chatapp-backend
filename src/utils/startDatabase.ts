@@ -1,6 +1,7 @@
 import Logger from "bunyan";
 import { connect, connection } from "mongoose";
 import { appConfig } from "src/config";
+import { redisConnection } from "src/shared/services/cache/";
 
 const log: Logger = appConfig.createLogger("database");
 
@@ -12,6 +13,7 @@ async function connectToDB(): Promise<void> {
 export default async function startDatabase() {
 	try {
 		await connectToDB();
+		redisConnection.connect();
 	} catch (err) {
 		log.error(err);
 		return process.exit(1);
